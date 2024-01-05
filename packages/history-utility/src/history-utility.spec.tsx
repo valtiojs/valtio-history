@@ -1,6 +1,5 @@
 import { StrictMode } from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { it } from 'vitest';
 import { useSnapshot } from 'valtio';
 
 import { proxyWithHistory } from './history-utility';
