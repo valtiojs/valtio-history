@@ -28,7 +28,7 @@ jobs:
       - uses: nrwl/nx-set-shas@v3
       # This line is needed for nx affected to work when CI is running on a PR
       - run: git branch --track main origin/main
-        if: github.ref == 'refs/heads/main'
+        if: github.ref != 'refs/heads/main'
 
       - run: pnpm nx affected -t test,build --parallel=3 --projects=tag:publish
       - run: pnpm nx run-many -t publish --projects=tag:publish --tag latest
