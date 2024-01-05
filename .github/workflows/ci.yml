@@ -44,4 +44,4 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: nrwl/nx-tag-successful-ci-run@v1
         with:
-          remove-tags-matching-pattern: 'nx_successful_ci_run__'
+          remove-tags-matching-pattern: 'nx_successful_ci_run__*'
