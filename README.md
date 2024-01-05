@@ -6,9 +6,9 @@ https://valtio.pmnd.rs/docs/api/utils/proxyWithHistory
 
 ### Main Packages
 
-| Name           | Info                                                                                                                                                |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| valtio-history | [code](packages/history-utility) <br/> <br/> [![npm version](https://badge.fury.io/js/valtio-history.svg)](https://badge.fury.io/js/valtio-history) |
+| Name                                       | Info                                                                                                   |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| [valtio-history](packages/history-utility) | [![npm version](https://badge.fury.io/js/valtio-history.svg)](https://badge.fury.io/js/valtio-history) |
 
 ---
 
