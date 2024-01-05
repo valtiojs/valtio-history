@@ -38,10 +38,3 @@ jobs:
 
       - run: pnpm nx format:check
       - run: pnpm nx affected -t lint,test --parallel=3
-
-      # Should be run last
-      - name: Tag main branch if all jobs succeed
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        uses: nrwl/nx-tag-successful-ci-run@v1
-        with:
-          remove-tags-matching-pattern: 'nx_successful_ci_run__*'
