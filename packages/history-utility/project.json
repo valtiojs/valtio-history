@@ -1,0 +1,37 @@
+{
+  "name": "history-utility",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/history-utility/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/history-utility",
+        "main": "packages/history-utility/src/index.ts",
+        "tsConfig": "packages/history-utility/tsconfig.lib.json",
+        "assets": ["packages/history-utility/*.md"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs -n history-utility -t {args.tag}",
+      "dependsOn": ["build"],
+      "options": {
+        "localRegistry": "bla"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/packages/history-utility"
+      }
+    }
+  },
+  "tags": ["publish"]
+}

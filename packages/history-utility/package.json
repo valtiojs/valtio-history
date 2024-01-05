@@ -1,0 +1,27 @@
+{
+  "name": "valtio-history",
+  "version": "0.0.0",
+  "author": "Daishi Kato",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valtiojs/valtio-history.git"
+  },
+  "keywords": [
+    "history",
+    "valtio",
+    "undo",
+    "redo",
+    "proxy",
+    "utility",
+    "valtio-utility"
+  ],
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "valtio": ">=1.0.0"
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts"
+}
