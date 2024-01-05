@@ -60,7 +60,7 @@ const deepClone = <T>(value: T): T => {
  * - Suspense/promise is not supported.
  *
  * @example
- * import { proxyWithHistory } from 'valtio/utils'
+ * import { proxyWithHistory } from 'valtio-history'
  * const state = proxyWithHistory({
  *   count: 1,
  * })
