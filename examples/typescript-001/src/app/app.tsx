@@ -16,8 +16,11 @@ export default function App() {
     <div className="App">
       <h2>Editor with history</h2>
       <div className="info">
-        <small>{history.index} changes</small>
-        <small>{getCurrentChangeDate().toISOString()}</small>
+        <span>
+          change {history.index + 1} / {history.nodes.length}
+        </span>
+        <span>|</span>
+        <span>{getCurrentChangeDate().toISOString()}</span>
       </div>
       <div className="editor">
         <textarea value={value.text} rows={4} onChange={update} />
