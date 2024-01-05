@@ -4,6 +4,12 @@ valtio utility for creating a proxy state with history tracking
 
 https://valtio.pmnd.rs/docs/api/utils/proxyWithHistory
 
+### Main Packages
+
+| Name           | Info                                                                                                                                                |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| valtio-history | [code](packages/history-utility) <br/> <br/> [![npm version](https://badge.fury.io/js/valtio-history.svg)](https://badge.fury.io/js/valtio-history) |
+
 ---
 
 ## Getting Started

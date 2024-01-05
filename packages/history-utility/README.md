@@ -12,7 +12,7 @@ https://valtio.pmnd.rs/docs/api/utils/proxyWithHistory
 
 ```tsx
 // replace the following line
-// import { proxyWithHistory } from '`valtio/utils';
+// import { proxyWithHistory } from 'valtio/utils';
 
 import { proxyWithHistory } from 'valtio-history';
 import { useSnapshot } from 'valtio';
