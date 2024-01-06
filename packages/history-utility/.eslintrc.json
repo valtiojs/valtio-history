@@ -25,7 +25,7 @@
               "{projectRoot}/vite.config.{js,ts,mjs,mts}",
               "*.spec.{js,ts,tsx,mjs,mts}"
             ],
-            "ignoredDependencies": ["react", "@testing-library/react"]
+            "ignoredDependencies": ["react", "@testing-library/react", "vitest"]
           }
         ]
       }
