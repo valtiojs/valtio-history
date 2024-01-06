@@ -13,6 +13,9 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
       "valtio-history": ["packages/history-utility/src/index.ts"]

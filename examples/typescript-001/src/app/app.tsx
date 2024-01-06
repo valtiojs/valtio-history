@@ -20,7 +20,7 @@ export default function App() {
           change {history.index + 1} / {history.nodes.length}
         </span>
         <span>|</span>
-        <span>{getCurrentChangeDate().toISOString()}</span>
+        <span>{getCurrentChangeDate()?.toISOString()}</span>
       </div>
       <div className="editor">
         <textarea value={value.text} rows={4} onChange={update} />
