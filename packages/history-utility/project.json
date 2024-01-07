@@ -31,6 +31,15 @@
       "options": {
         "reportsDirectory": "../../coverage/packages/history-utility"
       }
+    },
+    "docs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cd packages/history-utility && pnpm typedoc --plugin typedoc-plugin-markdown src/index.ts && rm docs/README.md",
+          "sleep 3s && pnpm nx format:write"
+        ]
+      }
     }
   },
   "tags": ["publish"]

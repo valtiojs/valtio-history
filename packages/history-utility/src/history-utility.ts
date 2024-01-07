@@ -8,14 +8,33 @@ import {
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio/vanilla';
 
 export type HistoryNode<T> = {
+  /**
+   * The snapshot being tracked
+   */
   snapshot: Snapshot<T>;
+  /**
+   * The date when the node was created
+   */
   createdAt: Date;
+  /**
+   * The date when the node was updated. Will be undefined if
+   * the node was never updated.
+   */
   updatedAt?: Date;
 };
 
 export type History<T> = {
+  /**
+   * field for holding sandbox changes; used to avoid infinite loops
+   */
   wip?: Snapshot<T>;
+  /**
+   * the nodes of the history for each change
+   */
   nodes: HistoryNode<T>[];
+  /**
+   * the history index of the current snapshot
+   */
   index: number;
 };
 
@@ -41,30 +60,29 @@ const deepClone = <T>(value: T): T => {
 };
 
 /**
- * proxyWithHistory
- *
  * This creates a new proxy with history support (ProxyHistoryObject).
- * It includes following properties:
- * - value: any value (does not have to be an object)
- * - history: an object holding the history of snapshots and other metadata
- *   - history.index: the history index to the current snapshot
- *   - history.nodes: the nodes of the history for each change
- *   - history.wip: field for holding sandbox changes; used to avoid infinite loops
- * - canUndo: a function to return true if undo is available
- * - undo: a function to go back history
- * - canRedo: a function to return true if redo is available
- * - redo: a function to go forward history
- * - saveHistory: a function to save history
- * - getCurrentChangeDate: gets the date of the current change
- * - remove: a function to remove a specified history index
- * - replace: a function to replace a snapshot at a specified history index
- * - getNode: a function to get the node at a specified history index
+ * It includes following main properties:<br>
+ * - value: any value (does not have to be an object)<br>
+ * - history: an object holding the history of snapshots and other metadata<br>
+ *   - history.index: the history index of the current snapshot<br>
+ *   - history.nodes: the nodes of the history for each change<br>
+ *   - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>
+ * - canUndo: a function to return true if undo is available <br>
+ * - undo: a function to go back history <br>
+ * - canRedo: a function to return true if redo is available <br>
+ * - redo: a function to go forward history <br>
+ * - saveHistory: a function to save history <br>
+ * - getCurrentChangeDate: gets the date of the current change <br>
+ * - remove: a function to remove a specified history index <br>
+ * - replace: a function to replace a snapshot at a specified history index <br>
+ * - getNode: a function to get the node at a specified history index <br>
  *
- * [Notes]
- * - Suspense/promise is not supported.
+ * <br>
+ * Notes: <br>
+ * - Suspense/promise is not supported. <br>
  *
  * @param initialValue - any object to track
- * @param skipSubscribe - determine if to skip the internal subscribe behaviour. default: false
+ * @param skipSubscribe - determines if the internal subscribe behaviour should be skipped.
  * @returns  proxyObject
  *
  * @example
@@ -75,15 +93,22 @@ const deepClone = <T>(value: T): T => {
  */
 export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
   const proxyObject = proxy({
+    /**
+     * any value to be tracked (does not have to be an object)
+     */
     value: initialValue,
+    /**
+     * an object holding the history of snapshots and other metadata <br>
+     *   - history.index: the history index to the current snapshot <br>
+     *   - history.nodes: the nodes of the history for each change <br>
+     *   - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>
+     */
     history: ref<History<V>>({
       wip: undefined, // to avoid infinite loop
       nodes: [],
       index: -1,
     }),
     /**
-     * getCurrentChangeDate
-     *
      * get the date when a node was entered into history.
      *
      * @returns date
@@ -93,8 +118,6 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
       return node?.createdAt;
     },
     /**
-     * getNode
-     *
      * utility method to get a history node.
      * The snapshot within this node is already cloned and
      * will not affect the original value if updated.
@@ -108,8 +131,18 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
         ? { ...node, snapshot: proxyObject.clone(node.snapshot) }
         : undefined;
     },
+    /**
+     * utility to clone a snapshot
+     */
     clone: deepClone,
+    /**
+     * a function to return true if undo is available
+     * @returns boolean
+     */
     canUndo: () => proxyObject.history.index > 0,
+    /**
+     * a function to go back in history
+     */
     undo: () => {
       if (proxyObject.canUndo()) {
         proxyObject.history.wip = proxyObject.clone(
@@ -118,8 +151,15 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
+    /**
+     * a function to return true if redo is available
+     * @returns boolean
+     */
     canRedo: () =>
       proxyObject.history.index < proxyObject.history.nodes.length - 1,
+    /**
+     * a function to go forward in history
+     */
     redo: () => {
       if (proxyObject.canRedo()) {
         proxyObject.history.wip = proxyObject.clone(
@@ -128,6 +168,9 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
+    /**
+     * a function to execute saving history when changes are made to `value`
+     */
     saveHistory: () => {
       proxyObject.history.nodes.splice(proxyObject.history.index + 1);
       proxyObject.history.nodes.push({
@@ -136,6 +179,9 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
       });
       ++proxyObject.history.index;
     },
+    /**
+     * a function to subscribe to changes made to `value`
+     */
     subscribe: () =>
       subscribe(proxyObject, (ops) => {
         if (
@@ -152,8 +198,6 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
     // history rewrite utilities
 
     /**
-     * remove
-     *
      * The remove method is only invoked when there are
      * more than one nodes and when a valid index is provided.
      * If the current index is removed,
@@ -191,18 +235,17 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
     },
 
     /**
-     * replace
-     *
      * utility to replace a value in history. The history
-     * changes with not be affected, only the value to be replaced.
+     * changes will not be affected, only the value to be replaced.
      * If a base value is needed to operate on,
      * the `getNode` utility can be used to retrieve
      * a cloned historyNode.
      *
-     * Notes:
-     * - No operations are done on the value provided to this utility.
+     * <br> <br>
+     * Notes: <br>
+     * - No operations are done on the value provided to this utility. <br>
      * - This is an advanced method, please ensure the value provided
-     *   is a snapshot of the same type of the value being tracked.
+     *   is a snapshot of the same type of the value being tracked. <br>
      *
      * @param index - index to replace value for
      * @param value - the updated snapshot to be stored at the index
