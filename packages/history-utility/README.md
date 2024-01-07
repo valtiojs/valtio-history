@@ -35,7 +35,8 @@ export default function App() {
     history,
     canUndo,
     canRedo,
-    getCurrentChangeDate
+    getCurrentChangeDate,
+    remove,
 } = useSnapshot(state);
 
   ...

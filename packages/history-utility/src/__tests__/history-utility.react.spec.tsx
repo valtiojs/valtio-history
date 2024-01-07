@@ -5,8 +5,8 @@ import { describe, it } from 'vitest';
 
 import { proxyWithHistory } from '../history-utility';
 
-describe('proxyWithHistory', () => {
-  describe('react: basic', () => {
+describe('proxyWithHistory: react', () => {
+  describe('basic', () => {
     it('should do simple count', async () => {
       const state = proxyWithHistory(0);
 

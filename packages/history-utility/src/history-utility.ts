@@ -42,7 +42,7 @@ const deepClone = <T>(value: T): T => {
 /**
  * proxyWithHistory
  *
- * This creates a new proxy with history support.
+ * This creates a new proxy with history support (ProxyHistoryObject).
  * It includes following properties:
  * - value: any value (does not have to be an object)
  * - history: an object holding the history of snapshots and other metadata
@@ -55,9 +55,14 @@ const deepClone = <T>(value: T): T => {
  * - redo: a function to go forward history
  * - saveHistory: a function to save history
  * - getCurrentChangeDate: gets the date of the current change
+ * - remove: a function to remove a specified history index
  *
  * [Notes]
  * - Suspense/promise is not supported.
+ *
+ * @param initialValue - any object to track
+ * @param skipSubscribe - determine if to skip the internal subscribe behaviour. default: false
+ * @returns  proxyObject
  *
  * @example
  * import { proxyWithHistory } from 'valtio-history'
@@ -117,6 +122,47 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
           proxyObject.saveHistory();
         }
       }),
+
+    // history rewrite utilities
+
+    /**
+     * remove
+     *
+     * The remove method is only invoked when there are
+     * more than one nodes and when a valid index is provided.
+     * If the current index is removed,
+     * An index greater than the current index will be preferred as the next
+     * value.
+     *
+     * @param index - index of the node to remove
+     * @returns removedNode
+     */
+    remove: (index: number) => {
+      const node = proxyObject.history.nodes[index];
+      const isCurrentIndex = proxyObject.history.index === index;
+      const lastIndex = proxyObject.history.nodes.length - 1;
+      const isLastIndex = lastIndex === index;
+
+      if (!node || proxyObject.history.nodes.length < 2) return;
+
+      if (isCurrentIndex) {
+        const resolvedIndex = isLastIndex ? index - 1 : index + 1;
+        const resolvedNode = proxyObject.history.nodes[resolvedIndex];
+
+        proxyObject.history.wip = proxyObject.clone(resolvedNode?.snapshot);
+        proxyObject.value = proxyObject.history.wip as V;
+
+        if (isLastIndex) proxyObject.history.index--;
+      }
+
+      proxyObject.history.nodes.splice(index, 1);
+
+      if (!isCurrentIndex && proxyObject.history.index > index) {
+        proxyObject.history.index--;
+      }
+
+      return node;
+    },
   });
 
   proxyObject.saveHistory();
