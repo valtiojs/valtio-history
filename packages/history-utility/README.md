@@ -36,7 +36,9 @@ export default function App() {
     canUndo,
     canRedo,
     getCurrentChangeDate,
+    getNode,
     remove,
+    replace,
 } = useSnapshot(state);
 
   ...
@@ -47,4 +49,4 @@ export default function App() {
 
 - the `history` object has changes
   - `history.snapshots` is renamed to `history.nodes`
-  - a `HistoryNode` has the structure `{ createdAt: Date; snapshot: Snapshot<T> }`
+  - a `HistoryNode` has the structure `{ snapshot: Snapshot<T>; createdAt: Date; updatedAt?: Date;  }`

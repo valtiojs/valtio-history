@@ -256,4 +256,134 @@ describe('proxyWithHistory: vanilla', () => {
       expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4]);
     });
   });
+
+  describe('replace', () => {
+    it('should replace no items in history when invalid index is provided', async () => {
+      const state = proxyWithHistory({ count: 0 });
+
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(5);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(5);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+
+      state.replace(100, { count: 100 });
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(5);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(5);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+    });
+
+    it('should replace current index as last index in history without increasing history length', async () => {
+      const state = proxyWithHistory({ count: 0 });
+
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(5);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(5);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+
+      state.replace(5, { count: 100 });
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(100);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(5);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 100]);
+    });
+
+    it('should replace current index when not last index in history without increasing history', async () => {
+      const state = proxyWithHistory({ count: 0 });
+
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.undo();
+      await Promise.resolve();
+      state.undo();
+      await Promise.resolve();
+      state.undo();
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(2);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(2);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+
+      state.replace(2, { count: 100 });
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(100);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(2);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 100, 3, 4, 5]);
+    });
+
+    it('should replace item in history without increasing history', async () => {
+      const state = proxyWithHistory({ count: 0 });
+
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.undo();
+      await Promise.resolve();
+      state.undo();
+      await Promise.resolve();
+      state.undo();
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(2);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(2);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+
+      state.replace(3, { count: 100 });
+      await Promise.resolve();
+      state.replace(4, { count: 200 });
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(2);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(2);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([
+        0, 1, 2, 100, 200, 5,
+      ]);
+    });
+  });
 });

@@ -8,8 +8,9 @@ import {
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio/vanilla';
 
 export type HistoryNode<T> = {
-  createdAt: Date;
   snapshot: Snapshot<T>;
+  createdAt: Date;
+  updatedAt?: Date;
 };
 
 export type History<T> = {
@@ -56,6 +57,8 @@ const deepClone = <T>(value: T): T => {
  * - saveHistory: a function to save history
  * - getCurrentChangeDate: gets the date of the current change
  * - remove: a function to remove a specified history index
+ * - replace: a function to replace a snapshot at a specified history index
+ * - getNode: a function to get the node at a specified history index
  *
  * [Notes]
  * - Suspense/promise is not supported.
@@ -78,9 +81,32 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
       nodes: [],
       index: -1,
     }),
+    /**
+     * getCurrentChangeDate
+     *
+     * get the date when a node was entered into history.
+     *
+     * @returns date
+     */
     getCurrentChangeDate: () => {
       const node = proxyObject.history.nodes[proxyObject.history.index];
       return node?.createdAt;
+    },
+    /**
+     * getNode
+     *
+     * utility method to get a history node.
+     * The snapshot within this node is already cloned and
+     * will not affect the original value if updated.
+     *
+     * @param index
+     * @returns historyNode
+     */
+    getNode: (index: number) => {
+      const node = proxyObject.history.nodes[index];
+      return node
+        ? { ...node, snapshot: proxyObject.clone(node.snapshot) }
+        : undefined;
     },
     clone: deepClone,
     canUndo: () => proxyObject.history.index > 0,
@@ -162,6 +188,41 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
       }
 
       return node;
+    },
+
+    /**
+     * replace
+     *
+     * utility to replace a value in history. The history
+     * changes with not be affected, only the value to be replaced.
+     * If a base value is needed to operate on,
+     * the `getNode` utility can be used to retrieve
+     * a cloned historyNode.
+     *
+     * Notes:
+     * - No operations are done on the value provided to this utility.
+     * - This is an advanced method, please ensure the value provided
+     *   is a snapshot of the same type of the value being tracked.
+     *
+     * @param index - index to replace value for
+     * @param value - the updated snapshot to be stored at the index
+     */
+    replace: (index: number, value: Snapshot<V>) => {
+      const node = proxyObject.history.nodes[index];
+      const isCurrentIndex = proxyObject.history.index === index;
+
+      if (!node) return;
+
+      proxyObject.history.nodes[index] = {
+        ...node,
+        snapshot: value,
+        updatedAt: new Date(),
+      };
+
+      if (isCurrentIndex) {
+        proxyObject.history.wip = value;
+        proxyObject.value = proxyObject.history.wip as V;
+      }
     },
   });
 
