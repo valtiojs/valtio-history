@@ -6,6 +6,8 @@ valtio utility for creating a proxy state with history tracking
 
 https://valtio.pmnd.rs/docs/api/utils/proxyWithHistory
 
+see detailed [api docs](https://github.com/valtiojs/valtio-history/blob/main/packages/history-utility/docs/modules.md) for more info.
+
 ---
 
 ## Migrating from `valtio/utils`

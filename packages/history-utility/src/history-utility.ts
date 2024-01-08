@@ -136,6 +136,18 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
      */
     clone: deepClone,
     /**
+     * a function to go to a specific index in history
+     */
+    goTo: (index: number) => {
+      const node = proxyObject.history.nodes[index];
+
+      if (!node) return;
+
+      proxyObject.history.wip = proxyObject.clone(node.snapshot);
+      proxyObject.value = proxyObject.history.wip as V;
+      proxyObject.history.index = index;
+    },
+    /**
      * a function to return true if undo is available
      * @returns boolean
      */
