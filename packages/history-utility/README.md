@@ -47,8 +47,9 @@ export default function App() {
 }
 ```
 
-### Notable changes
+### Notable Breaking changes
 
 - the `history` object has changes
   - `history.snapshots` is renamed to `history.nodes`
   - a `HistoryNode` has the structure `{ snapshot: Snapshot<T>; createdAt: Date; updatedAt?: Date;  }`
+- The second parameter of `proxyWithHistory` is now an object instead of a `boolean`. `{ skipSubscribe?: boolean }`

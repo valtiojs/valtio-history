@@ -8,6 +8,7 @@
 
 - [History](modules.md#history)
 - [HistoryNode](modules.md#historynode)
+- [HistoryOptions](modules.md#historyoptions)
 
 ### Functions
 
@@ -35,7 +36,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L26)
+[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/f4b7d5a/packages/history-utility/src/history-utility.ts#L26)
 
 ---
 
@@ -59,13 +60,29 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L10)
+[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/f4b7d5a/packages/history-utility/src/history-utility.ts#L10)
+
+---
+
+### HistoryOptions
+
+Ƭ **HistoryOptions**: `Object`
+
+#### Type declaration
+
+| Name             | Type      | Description                                                       |
+| :--------------- | :-------- | :---------------------------------------------------------------- |
+| `skipSubscribe?` | `boolean` | determines if the internal subscribe behaviour should be skipped. |
+
+#### Defined in
+
+[packages/history-utility/src/history-utility.ts:41](https://github.com/valtiojs/valtio-history/blob/f4b7d5a/packages/history-utility/src/history-utility.ts#L41)
 
 ## Functions
 
 ### proxyWithHistory
 
-▸ **proxyWithHistory**\<`V`\>(`initialValue`, `skipSubscribe?`): `Object`
+▸ **proxyWithHistory**\<`V`\>(`initialValue`, `options?`): `Object`
 
 This creates a new proxy with history support (ProxyHistoryObject).
 It includes following main properties:<br>
@@ -97,10 +114,10 @@ Notes: <br>
 
 #### Parameters
 
-| Name            | Type      | Default value | Description                                                       |
-| :-------------- | :-------- | :------------ | :---------------------------------------------------------------- |
-| `initialValue`  | `V`       | `undefined`   | any object to track                                               |
-| `skipSubscribe` | `boolean` | `false`       | determines if the internal subscribe behaviour should be skipped. |
+| Name           | Type                                          | Description                                    |
+| :------------- | :-------------------------------------------- | :--------------------------------------------- |
+| `initialValue` | `V`                                           | any value to be tracked                        |
+| `options?`     | [`HistoryOptions`](modules.md#historyoptions) | use to configure the proxyWithHistory utility. |
 
 #### Returns
 
@@ -136,4 +153,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:94](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L94)
+[packages/history-utility/src/history-utility.ts:101](https://github.com/valtiojs/valtio-history/blob/f4b7d5a/packages/history-utility/src/history-utility.ts#L101)

@@ -38,6 +38,13 @@ export type History<T> = {
   index: number;
 };
 
+export type HistoryOptions = {
+  /**
+   * determines if the internal subscribe behaviour should be skipped.
+   */
+  skipSubscribe?: boolean;
+};
+
 const isObject = (value: unknown): value is object =>
   !!value && typeof value === 'object';
 
@@ -81,8 +88,8 @@ const deepClone = <T>(value: T): T => {
  * Notes: <br>
  * - Suspense/promise is not supported. <br>
  *
- * @param initialValue - any object to track
- * @param skipSubscribe - determines if the internal subscribe behaviour should be skipped.
+ * @param initialValue - any value to be tracked
+ * @param options - use to configure the proxyWithHistory utility.
  * @returns  proxyObject
  *
  * @example
@@ -91,7 +98,7 @@ const deepClone = <T>(value: T): T => {
  *   count: 1,
  * })
  */
-export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
+export function proxyWithHistory<V>(initialValue: V, options?: HistoryOptions) {
   const proxyObject = proxy({
     /**
      * any value to be tracked (does not have to be an object)
@@ -283,7 +290,7 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
 
   proxyObject.saveHistory();
 
-  if (!skipSubscribe) {
+  if (!options?.skipSubscribe) {
     proxyObject.subscribe();
   }
 
