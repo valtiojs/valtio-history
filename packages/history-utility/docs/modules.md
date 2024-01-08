@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/f4b7d5a/packages/history-utility/src/history-utility.ts#L26)
+[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/2c94538/packages/history-utility/src/history-utility.ts#L26)
 
 ---
 
@@ -60,7 +60,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/f4b7d5a/packages/history-utility/src/history-utility.ts#L10)
+[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/2c94538/packages/history-utility/src/history-utility.ts#L10)
 
 ---
 
@@ -76,7 +76,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:41](https://github.com/valtiojs/valtio-history/blob/f4b7d5a/packages/history-utility/src/history-utility.ts#L41)
+[packages/history-utility/src/history-utility.ts:43](https://github.com/valtiojs/valtio-history/blob/2c94538/packages/history-utility/src/history-utility.ts#L43)
 
 ## Functions
 
@@ -138,6 +138,7 @@ proxyObject
 | `remove`               | (`index`: `number`) => `undefined` \| [`HistoryNode`](modules.md#historynode)\<`V`\>                                  | The remove method is only invoked when there are more than one nodes and when a valid index is provided. If the current index is removed, An index greater than the current index will be preferred as the next value.                                                                                                                                                                                                                                 |
 | `replace`              | (`index`: `number`, `value`: `INTERNAL_Snapshot`\<`V`\>) => `void`                                                    | utility to replace a value in history. The history changes will not be affected, only the value to be replaced. If a base value is needed to operate on, the `getNode` utility can be used to retrieve a cloned historyNode. <br> <br> Notes: <br> - No operations are done on the value provided to this utility. <br> - This is an advanced method, please ensure the value provided is a snapshot of the same type of the value being tracked. <br> |
 | `saveHistory`          | () => `void`                                                                                                          | a function to execute saving history when changes are made to `value`                                                                                                                                                                                                                                                                                                                                                                                  |
+| `shouldSaveHistory`    | (`ops`: `Op`[]) => `boolean`                                                                                          | a function to return true if history should be saved                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `subscribe`            | () => () => `void`                                                                                                    | a function to subscribe to changes made to `value`                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `undo`                 | () => `void`                                                                                                          | a function to go back in history                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `value`                | `V`                                                                                                                   | any value to be tracked (does not have to be an object)                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -153,4 +154,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:101](https://github.com/valtiojs/valtio-history/blob/f4b7d5a/packages/history-utility/src/history-utility.ts#L101)
+[packages/history-utility/src/history-utility.ts:103](https://github.com/valtiojs/valtio-history/blob/2c94538/packages/history-utility/src/history-utility.ts#L103)

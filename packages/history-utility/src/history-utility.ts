@@ -38,6 +38,8 @@ export type History<T> = {
   index: number;
 };
 
+type SubscribeOps = Parameters<Parameters<typeof subscribe>[1]>[0];
+
 export type HistoryOptions = {
   /**
    * determines if the internal subscribe behaviour should be skipped.
@@ -199,19 +201,23 @@ export function proxyWithHistory<V>(initialValue: V, options?: HistoryOptions) {
       ++proxyObject.history.index;
     },
     /**
+     * a function to return true if history should be saved
+     *
+     * @param ops - subscribeOps from subscribe callback
+     * @returns boolean
+     */
+    shouldSaveHistory: (ops: SubscribeOps) =>
+      ops.every(
+        (op) =>
+          op[1][0] === 'value' &&
+          (op[0] !== 'set' || op[2] !== proxyObject.history.wip)
+      ),
+    /**
      * a function to subscribe to changes made to `value`
      */
     subscribe: () =>
       subscribe(proxyObject, (ops) => {
-        if (
-          ops.every(
-            (op) =>
-              op[1][0] === 'value' &&
-              (op[0] !== 'set' || op[2] !== proxyObject.history.wip)
-          )
-        ) {
-          proxyObject.saveHistory();
-        }
+        if (proxyObject.shouldSaveHistory(ops)) proxyObject.saveHistory();
       }),
 
     // history rewrite utilities
