@@ -36,7 +36,20 @@ export type History<T> = {
    * the history index of the current snapshot
    */
   index: number;
+  /**
+   * a function to stop the internal subscription process
+   */
+  unsubscribe: ReturnType<typeof subscribe>;
 };
+
+type SubscribeOps = Parameters<Parameters<typeof subscribe>[1]>[0];
+type SubscribeCallback = (ops: SubscribeOps, historySaved: boolean) => void;
+/**
+ * A field to either enable/disable the internal subscribe functionality.
+ * Optionally a callback function can be provided to hook into the
+ * internal subscribe handler.
+ */
+export type SkipSubscribeOrCallback = boolean | SubscribeCallback;
 
 const isObject = (value: unknown): value is object =>
   !!value && typeof value === 'object';
@@ -64,9 +77,6 @@ const deepClone = <T>(value: T): T => {
  * It includes following main properties:<br>
  * - value: any value (does not have to be an object)<br>
  * - history: an object holding the history of snapshots and other metadata<br>
- *   - history.index: the history index of the current snapshot<br>
- *   - history.nodes: the nodes of the history for each change<br>
- *   - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>
  * - canUndo: a function to return true if undo is available <br>
  * - undo: a function to go back history <br>
  * - canRedo: a function to return true if redo is available <br>
@@ -82,7 +92,8 @@ const deepClone = <T>(value: T): T => {
  * - Suspense/promise is not supported. <br>
  *
  * @param initialValue - any object to track
- * @param skipSubscribe - determines if the internal subscribe behaviour should be skipped.
+ * @param skipSubscribeOrCallback - determines if the internal subscribe behaviour should be skipped. Optionally,
+ * a callback function can be provided.
  * @returns  proxyObject
  *
  * @example
@@ -91,7 +102,10 @@ const deepClone = <T>(value: T): T => {
  *   count: 1,
  * })
  */
-export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
+export function proxyWithHistory<V>(
+  initialValue: V,
+  skipSubscribeOrCallback: SkipSubscribeOrCallback = false
+) {
   const proxyObject = proxy({
     /**
      * any value to be tracked (does not have to be an object)
@@ -101,12 +115,14 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
      * an object holding the history of snapshots and other metadata <br>
      *   - history.index: the history index to the current snapshot <br>
      *   - history.nodes: the nodes of the history for each change <br>
-     *   - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>
+     *   - history.wip: field for holding sandbox changes; used to avoid infinite loops <br>
+     *   - history.unsubscribe: a function to stop the internal subscription process <br>
      */
     history: ref<History<V>>({
       wip: undefined, // to avoid infinite loop
       nodes: [],
       index: -1,
+      unsubscribe: () => {},
     }),
     /**
      * get the date when a node was entered into history.
@@ -196,14 +212,15 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
      */
     subscribe: () =>
       subscribe(proxyObject, (ops) => {
-        if (
-          ops.every(
-            (op) =>
-              op[1][0] === 'value' &&
-              (op[0] !== 'set' || op[2] !== proxyObject.history.wip)
-          )
-        ) {
-          proxyObject.saveHistory();
+        const shouldSaveHistory = ops.every(
+          (op) =>
+            op[1][0] === 'value' &&
+            (op[0] !== 'set' || op[2] !== proxyObject.history.wip)
+        );
+
+        if (shouldSaveHistory) proxyObject.saveHistory();
+        if (typeof skipSubscribeOrCallback === 'function') {
+          skipSubscribeOrCallback(ops, shouldSaveHistory);
         }
       }),
 
@@ -283,8 +300,8 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
 
   proxyObject.saveHistory();
 
-  if (!skipSubscribe) {
-    proxyObject.subscribe();
+  if (skipSubscribeOrCallback !== true) {
+    proxyObject.history.unsubscribe = proxyObject.subscribe();
   }
 
   return proxyObject;
