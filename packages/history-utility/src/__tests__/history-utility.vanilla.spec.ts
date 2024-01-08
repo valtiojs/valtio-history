@@ -386,4 +386,77 @@ describe('proxyWithHistory: vanilla', () => {
       ]);
     });
   });
+  describe('goTo', () => {
+    it('should be noop when invalid index is provided', async () => {
+      const state = proxyWithHistory({ count: 0 });
+
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(5);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(5);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+
+      state.goTo(100);
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(5);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(5);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+    });
+
+    it('should set specified index when index is valid', async () => {
+      const state = proxyWithHistory({ count: 0 });
+
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(5);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.index).toEqual(5);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+
+      state.goTo(1);
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(1);
+      expect(state.history.index).toEqual(1);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+
+      state.goTo(2);
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(2);
+      expect(state.history.index).toEqual(2);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+
+      state.goTo(4);
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(4);
+      expect(state.history.index).toEqual(4);
+      expect(state.history.nodes.length).toEqual(6);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2, 3, 4, 5]);
+    });
+  });
 });

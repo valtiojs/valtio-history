@@ -35,7 +35,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/3130a40/packages/history-utility/src/history-utility.ts#L26)
+[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L26)
 
 ---
 
@@ -59,7 +59,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/3130a40/packages/history-utility/src/history-utility.ts#L10)
+[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L10)
 
 ## Functions
 
@@ -115,6 +115,7 @@ proxyObject
 | `clone`                | \<T\>(`value`: `T`) => `T`                                                                                            | utility to clone a snapshot                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `getCurrentChangeDate` | () => `undefined` \| `Date`                                                                                           | get the date when a node was entered into history.                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `getNode`              | (`index`: `number`) => `undefined` \| \{ `createdAt`: `Date` ; `snapshot`: `Snapshot`\<`V`\> ; `updatedAt?`: `Date` } | utility method to get a history node. The snapshot within this node is already cloned and will not affect the original value if updated.                                                                                                                                                                                                                                                                                                               |
+| `goTo`                 | (`index`: `number`) => `void`                                                                                         | a function to go to a specific index in history                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `history`              | [`History`](modules.md#history)\<`V`\> & `AsRef`                                                                      | an object holding the history of snapshots and other metadata <br> - history.index: the history index to the current snapshot <br> - history.nodes: the nodes of the history for each change <br> - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>                                                                                                                                                                   |
 | `redo`                 | () => `void`                                                                                                          | a function to go forward in history                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `remove`               | (`index`: `number`) => `undefined` \| [`HistoryNode`](modules.md#historynode)\<`V`\>                                  | The remove method is only invoked when there are more than one nodes and when a valid index is provided. If the current index is removed, An index greater than the current index will be preferred as the next value.                                                                                                                                                                                                                                 |
@@ -135,4 +136,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:94](https://github.com/valtiojs/valtio-history/blob/3130a40/packages/history-utility/src/history-utility.ts#L94)
+[packages/history-utility/src/history-utility.ts:94](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L94)
