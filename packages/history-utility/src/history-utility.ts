@@ -6,7 +6,6 @@ import {
   subscribe,
 } from 'valtio/vanilla';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio/vanilla';
-import { warn } from './helpers';
 
 export type HistoryNode<T> = {
   /**
@@ -73,11 +72,13 @@ const normalizeOptions = (
   options?: HistoryOptions | boolean
 ): HistoryOptions => {
   if (typeof options === 'boolean') {
-    warn(`The second parameter of 'proxyWithHistory' as boolean is deprecated and support for boolean will be removed
+    if (import.meta.env?.MODE !== 'production') {
+      console.warn(`The second parameter of 'proxyWithHistory' as boolean is deprecated and support for boolean will be removed
     in the next major version. Please use the object syntax instead:
 
     { skipSubscribe: boolean }
     `);
+    }
     return { skipSubscribe: options };
   }
 
