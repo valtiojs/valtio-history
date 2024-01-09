@@ -1,6 +1,4 @@
-const isProduction =
-  import.meta?.env?.MODE === 'production' ||
-  process?.env?.['NODE_ENV'] === 'production';
+const isProduction = import.meta?.env?.MODE === 'production';
 
 export const warn = (...args: unknown[]) => {
   if (!isProduction) {
