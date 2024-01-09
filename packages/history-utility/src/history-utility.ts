@@ -38,6 +38,15 @@ export type History<T> = {
   index: number;
 };
 
+type SubscribeOps = Parameters<Parameters<typeof subscribe>[1]>[0];
+
+export type HistoryOptions = {
+  /**
+   * determines if the internal subscribe behaviour should be skipped.
+   */
+  skipSubscribe?: boolean;
+};
+
 const isObject = (value: unknown): value is object =>
   !!value && typeof value === 'object';
 
@@ -57,6 +66,32 @@ const deepClone = <T>(value: T): T => {
     baseObject[key as keyof T] = deepClone(value[key as keyof T]);
   });
   return baseObject;
+};
+
+const normalizeOptions = (
+  options?: HistoryOptions | boolean
+): HistoryOptions => {
+  if (typeof options === 'boolean') {
+    if (import.meta.env?.MODE !== 'production') {
+      console.warn(`The second parameter of 'proxyWithHistory' as boolean is deprecated and support for boolean will be removed
+    in the next major version. Please use the object syntax instead:
+
+    { skipSubscribe: boolean }
+    `);
+    }
+    return { skipSubscribe: options };
+  }
+
+  const defaultOptions = {
+    skipSubscribe: false,
+  };
+
+  if (!options) return defaultOptions;
+
+  return {
+    ...defaultOptions,
+    ...options,
+  };
 };
 
 /**
@@ -81,8 +116,8 @@ const deepClone = <T>(value: T): T => {
  * Notes: <br>
  * - Suspense/promise is not supported. <br>
  *
- * @param initialValue - any object to track
- * @param skipSubscribe - determines if the internal subscribe behaviour should be skipped.
+ * @param initialValue - any value to be tracked
+ * @param options - use to configure the proxyWithHistory utility.
  * @returns  proxyObject
  *
  * @example
@@ -91,7 +126,11 @@ const deepClone = <T>(value: T): T => {
  *   count: 1,
  * })
  */
-export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
+export function proxyWithHistory<V>(
+  initialValue: V,
+  options?: HistoryOptions | boolean
+) {
+  const utilOptions = normalizeOptions(options);
   const proxyObject = proxy({
     /**
      * any value to be tracked (does not have to be an object)
@@ -192,19 +231,23 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
       ++proxyObject.history.index;
     },
     /**
+     * a function that returns true when the history should be updated
+     *
+     * @param ops - subscribeOps from subscribe callback
+     * @returns boolean
+     */
+    shouldSaveHistory: (ops: SubscribeOps) =>
+      ops.every(
+        (op) =>
+          op[1][0] === 'value' &&
+          (op[0] !== 'set' || op[2] !== proxyObject.history.wip)
+      ),
+    /**
      * a function to subscribe to changes made to `value`
      */
     subscribe: () =>
       subscribe(proxyObject, (ops) => {
-        if (
-          ops.every(
-            (op) =>
-              op[1][0] === 'value' &&
-              (op[0] !== 'set' || op[2] !== proxyObject.history.wip)
-          )
-        ) {
-          proxyObject.saveHistory();
-        }
+        if (proxyObject.shouldSaveHistory(ops)) proxyObject.saveHistory();
       }),
 
     // history rewrite utilities
@@ -283,7 +326,7 @@ export function proxyWithHistory<V>(initialValue: V, skipSubscribe = false) {
 
   proxyObject.saveHistory();
 
-  if (!skipSubscribe) {
+  if (!utilOptions.skipSubscribe) {
     proxyObject.subscribe();
   }
 

@@ -8,6 +8,7 @@
 
 - [History](modules.md#history)
 - [HistoryNode](modules.md#historynode)
+- [HistoryOptions](modules.md#historyoptions)
 
 ### Functions
 
@@ -35,7 +36,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L26)
+[packages/history-utility/src/history-utility.ts:27](https://github.com/valtiojs/valtio-history/blob/7853d84/packages/history-utility/src/history-utility.ts#L27)
 
 ---
 
@@ -59,13 +60,29 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L10)
+[packages/history-utility/src/history-utility.ts:11](https://github.com/valtiojs/valtio-history/blob/7853d84/packages/history-utility/src/history-utility.ts#L11)
+
+---
+
+### HistoryOptions
+
+Ƭ **HistoryOptions**: `Object`
+
+#### Type declaration
+
+| Name             | Type      | Description                                                       |
+| :--------------- | :-------- | :---------------------------------------------------------------- |
+| `skipSubscribe?` | `boolean` | determines if the internal subscribe behaviour should be skipped. |
+
+#### Defined in
+
+[packages/history-utility/src/history-utility.ts:44](https://github.com/valtiojs/valtio-history/blob/7853d84/packages/history-utility/src/history-utility.ts#L44)
 
 ## Functions
 
 ### proxyWithHistory
 
-▸ **proxyWithHistory**\<`V`\>(`initialValue`, `skipSubscribe?`): `Object`
+▸ **proxyWithHistory**\<`V`\>(`initialValue`, `options?`): `Object`
 
 This creates a new proxy with history support (ProxyHistoryObject).
 It includes following main properties:<br>
@@ -97,10 +114,10 @@ Notes: <br>
 
 #### Parameters
 
-| Name            | Type      | Default value | Description                                                       |
-| :-------------- | :-------- | :------------ | :---------------------------------------------------------------- |
-| `initialValue`  | `V`       | `undefined`   | any object to track                                               |
-| `skipSubscribe` | `boolean` | `false`       | determines if the internal subscribe behaviour should be skipped. |
+| Name           | Type                                                       | Description                                    |
+| :------------- | :--------------------------------------------------------- | :--------------------------------------------- |
+| `initialValue` | `V`                                                        | any value to be tracked                        |
+| `options?`     | `boolean` \| [`HistoryOptions`](modules.md#historyoptions) | use to configure the proxyWithHistory utility. |
 
 #### Returns
 
@@ -121,6 +138,7 @@ proxyObject
 | `remove`               | (`index`: `number`) => `undefined` \| [`HistoryNode`](modules.md#historynode)\<`V`\>                                  | The remove method is only invoked when there are more than one nodes and when a valid index is provided. If the current index is removed, An index greater than the current index will be preferred as the next value.                                                                                                                                                                                                                                 |
 | `replace`              | (`index`: `number`, `value`: `INTERNAL_Snapshot`\<`V`\>) => `void`                                                    | utility to replace a value in history. The history changes will not be affected, only the value to be replaced. If a base value is needed to operate on, the `getNode` utility can be used to retrieve a cloned historyNode. <br> <br> Notes: <br> - No operations are done on the value provided to this utility. <br> - This is an advanced method, please ensure the value provided is a snapshot of the same type of the value being tracked. <br> |
 | `saveHistory`          | () => `void`                                                                                                          | a function to execute saving history when changes are made to `value`                                                                                                                                                                                                                                                                                                                                                                                  |
+| `shouldSaveHistory`    | (`ops`: `Op`[]) => `boolean`                                                                                          | a function that returns true when the history should be updated                                                                                                                                                                                                                                                                                                                                                                                        |
 | `subscribe`            | () => () => `void`                                                                                                    | a function to subscribe to changes made to `value`                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `undo`                 | () => `void`                                                                                                          | a function to go back in history                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `value`                | `V`                                                                                                                   | any value to be tracked (does not have to be an object)                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -136,4 +154,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:94](https://github.com/valtiojs/valtio-history/blob/86c1430/packages/history-utility/src/history-utility.ts#L94)
+[packages/history-utility/src/history-utility.ts:128](https://github.com/valtiojs/valtio-history/blob/7853d84/packages/history-utility/src/history-utility.ts#L128)

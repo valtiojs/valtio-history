@@ -38,3 +38,4 @@ jobs:
 
       - run: pnpm nx format:check
       - run: pnpm nx affected -t lint,test --parallel=3
+      - run: pnpm nx run-many -t build --parallel=3 --projects=tag:publish

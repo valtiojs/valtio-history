@@ -13,7 +13,7 @@
     "versionArgs": ["--workspaces false"]
   },
   "hooks": {
-    "after:bump": "pnpx auto-changelog -p"
+    "after:bump": ["pnpx auto-changelog -p", "pnpm nx run-many -t docs"]
   },
   "plugins": {
     "@release-it/bumper": {

@@ -37,7 +37,7 @@
       "options": {
         "commands": [
           "cd packages/history-utility && pnpm typedoc --plugin typedoc-plugin-markdown src/index.ts && rm docs/README.md",
-          "sleep 3s && pnpm nx format:write"
+          "sleep 5s && pnpm nx format:write"
         ]
       }
     }
