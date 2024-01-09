@@ -47,7 +47,7 @@ export default function App() {
 }
 ```
 
-### Notable Breaking changes
+### Notable changes
 
 - the `history` object has changes
   - `history.snapshots` is renamed to `history.nodes`

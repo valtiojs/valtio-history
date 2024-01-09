@@ -6,6 +6,7 @@ import {
   subscribe,
 } from 'valtio/vanilla';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio/vanilla';
+import { warn } from './helpers';
 
 export type HistoryNode<T> = {
   /**
@@ -68,6 +69,30 @@ const deepClone = <T>(value: T): T => {
   return baseObject;
 };
 
+const normalizeOptions = (
+  options?: HistoryOptions | boolean
+): HistoryOptions => {
+  if (typeof options === 'boolean') {
+    warn(`The second parameter of 'proxyWithHistory' as boolean is deprecated and support for boolean will be removed
+    in the next major version. Please use the object syntax instead:
+
+    { skipSubscribe: boolean }
+    `);
+    return { skipSubscribe: options };
+  }
+
+  const defaultOptions = {
+    skipSubscribe: false,
+  };
+
+  if (!options) return defaultOptions;
+
+  return {
+    ...defaultOptions,
+    ...options,
+  };
+};
+
 /**
  * This creates a new proxy with history support (ProxyHistoryObject).
  * It includes following main properties:<br>
@@ -100,7 +125,11 @@ const deepClone = <T>(value: T): T => {
  *   count: 1,
  * })
  */
-export function proxyWithHistory<V>(initialValue: V, options?: HistoryOptions) {
+export function proxyWithHistory<V>(
+  initialValue: V,
+  options?: HistoryOptions | boolean
+) {
+  const utilOptions = normalizeOptions(options);
   const proxyObject = proxy({
     /**
      * any value to be tracked (does not have to be an object)
@@ -201,7 +230,7 @@ export function proxyWithHistory<V>(initialValue: V, options?: HistoryOptions) {
       ++proxyObject.history.index;
     },
     /**
-     * a function to return true if history should be saved
+     * a function that returns true when the history should be updated
      *
      * @param ops - subscribeOps from subscribe callback
      * @returns boolean
@@ -296,7 +325,7 @@ export function proxyWithHistory<V>(initialValue: V, options?: HistoryOptions) {
 
   proxyObject.saveHistory();
 
-  if (!options?.skipSubscribe) {
+  if (!utilOptions.skipSubscribe) {
     proxyObject.subscribe();
   }
 
