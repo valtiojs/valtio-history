@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L26)
+[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/6de9669/packages/history-utility/src/history-utility.ts#L26)
 
 ---
 
@@ -50,11 +50,10 @@
 | Name           | Type      | Description                                             |
 | :------------- | :-------- | :------------------------------------------------------ |
 | `historySaved` | `boolean` | is true when the value has been changed by the consumer |
-| `ops`          | `any`[]   | the operations that caused the history change           |
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:43](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L43)
+[packages/history-utility/src/history-utility.ts:43](https://github.com/valtiojs/valtio-history/blob/6de9669/packages/history-utility/src/history-utility.ts#L43)
 
 ---
 
@@ -78,7 +77,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L10)
+[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/6de9669/packages/history-utility/src/history-utility.ts#L10)
 
 ---
 
@@ -101,7 +100,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:54](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L54)
+[packages/history-utility/src/history-utility.ts:50](https://github.com/valtiojs/valtio-history/blob/6de9669/packages/history-utility/src/history-utility.ts#L50)
 
 ## Functions
 
@@ -179,4 +178,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:147](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L147)
+[packages/history-utility/src/history-utility.ts:143](https://github.com/valtiojs/valtio-history/blob/6de9669/packages/history-utility/src/history-utility.ts#L143)

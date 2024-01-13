@@ -42,10 +42,6 @@ type SubscribeOps = Parameters<Parameters<typeof subscribe>[1]>[0];
 
 export type HistoryChangeMetadata = {
   /**
-   * the operations that caused the history change
-   */
-  ops: SubscribeOps;
-  /**
    * is true when the value has been changed by the consumer
    */
   historySaved: boolean;
@@ -270,7 +266,6 @@ export function proxyWithHistory<V>(
         if (shouldSaveHistory) proxyObject.saveHistory();
 
         utilOptions.onChange?.(proxyObject.value, {
-          ops,
           historySaved: shouldSaveHistory,
         });
       }),
@@ -351,9 +346,7 @@ export function proxyWithHistory<V>(
 
   proxyObject.saveHistory();
 
-  if (!utilOptions.skipSubscribe) {
-    proxyObject.subscribe();
-  }
+  if (!utilOptions.skipSubscribe) proxyObject.subscribe();
 
   return proxyObject;
 }
