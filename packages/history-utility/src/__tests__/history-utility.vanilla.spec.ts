@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { HistoryNode, proxyWithHistory } from '../history-utility';
 
@@ -23,6 +23,39 @@ describe('proxyWithHistory: vanilla', () => {
       state.redo();
       await Promise.resolve();
       expect(state.value.count).toEqual(1);
+    });
+
+    it('should call onChange when provided', async () => {
+      const onChange = vi.fn();
+      const state = proxyWithHistory({ count: 0 }, { onChange });
+      await Promise.resolve();
+      expect(state.value.count).toEqual(0);
+
+      state.value.count += 1;
+      await Promise.resolve();
+      expect(state.value.count).toEqual(1);
+      expect(onChange).toBeCalledWith(
+        { count: 1 },
+        expect.objectContaining({ historySaved: true })
+      );
+
+      state.undo();
+      await Promise.resolve();
+      expect(state.value.count).toEqual(0);
+      expect(onChange).toBeCalledWith(
+        { count: 0 },
+        expect.objectContaining({ historySaved: false })
+      );
+
+      state.redo();
+      await Promise.resolve();
+      expect(state.value.count).toEqual(1);
+      expect(onChange).toBeCalledWith(
+        { count: 1 },
+        expect.objectContaining({ historySaved: false })
+      );
+
+      expect(onChange).toHaveBeenCalledTimes(3);
     });
 
     it('should provide basic sequential undo functionality', async () => {

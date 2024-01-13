@@ -40,11 +40,29 @@ export type History<T> = {
 
 type SubscribeOps = Parameters<Parameters<typeof subscribe>[1]>[0];
 
-export type HistoryOptions = {
+export type HistoryChangeMetadata = {
+  /**
+   * the operations that caused the history change
+   */
+  ops: SubscribeOps;
+  /**
+   * is true when the value has been changed by the consumer
+   */
+  historySaved: boolean;
+};
+
+export type HistoryOptions<T> = {
   /**
    * determines if the internal subscribe behaviour should be skipped.
    */
   skipSubscribe?: boolean;
+  /**
+   * callback that triggers any time a change happens wihin the utility
+   *
+   * @param value - the changed value being tracked
+   * @param data - metadata of the change
+   */
+  onChange?(value: T, data: HistoryChangeMetadata): void;
 };
 
 const isObject = (value: unknown): value is object =>
@@ -68,9 +86,9 @@ const deepClone = <T>(value: T): T => {
   return baseObject;
 };
 
-const normalizeOptions = (
-  options?: HistoryOptions | boolean
-): HistoryOptions => {
+function normalizeOptions<T>(
+  options?: HistoryOptions<T> | boolean
+): HistoryOptions<T> {
   if (typeof options === 'boolean') {
     if (import.meta.env?.MODE !== 'production') {
       console.warn(`The second parameter of 'proxyWithHistory' as boolean is deprecated and support for boolean will be removed
@@ -92,7 +110,7 @@ const normalizeOptions = (
     ...defaultOptions,
     ...options,
   };
-};
+}
 
 /**
  * This creates a new proxy with history support (ProxyHistoryObject).
@@ -128,7 +146,7 @@ const normalizeOptions = (
  */
 export function proxyWithHistory<V>(
   initialValue: V,
-  options?: HistoryOptions | boolean
+  options?: HistoryOptions<V> | boolean
 ) {
   const utilOptions = normalizeOptions(options);
   const proxyObject = proxy({
@@ -247,7 +265,14 @@ export function proxyWithHistory<V>(
      */
     subscribe: () =>
       subscribe(proxyObject, (ops) => {
-        if (proxyObject.shouldSaveHistory(ops)) proxyObject.saveHistory();
+        const shouldSaveHistory = proxyObject.shouldSaveHistory(ops);
+
+        if (shouldSaveHistory) proxyObject.saveHistory();
+
+        utilOptions.onChange?.(proxyObject.value, {
+          ops,
+          historySaved: shouldSaveHistory,
+        });
       }),
 
     // history rewrite utilities

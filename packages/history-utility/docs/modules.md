@@ -7,6 +7,7 @@
 ### Type Aliases
 
 - [History](modules.md#history)
+- [HistoryChangeMetadata](modules.md#historychangemetadata)
 - [HistoryNode](modules.md#historynode)
 - [HistoryOptions](modules.md#historyoptions)
 
@@ -36,7 +37,24 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/43e2fcd/packages/history-utility/src/history-utility.ts#L26)
+[packages/history-utility/src/history-utility.ts:26](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L26)
+
+---
+
+### HistoryChangeMetadata
+
+Ƭ **HistoryChangeMetadata**: `Object`
+
+#### Type declaration
+
+| Name           | Type      | Description                                             |
+| :------------- | :-------- | :------------------------------------------------------ |
+| `historySaved` | `boolean` | is true when the value has been changed by the consumer |
+| `ops`          | `any`[]   | the operations that caused the history change           |
+
+#### Defined in
+
+[packages/history-utility/src/history-utility.ts:43](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L43)
 
 ---
 
@@ -60,23 +78,30 @@
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/43e2fcd/packages/history-utility/src/history-utility.ts#L10)
+[packages/history-utility/src/history-utility.ts:10](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L10)
 
 ---
 
 ### HistoryOptions
 
-Ƭ **HistoryOptions**: `Object`
+Ƭ **HistoryOptions**\<`T`\>: `Object`
+
+#### Type parameters
+
+| Name |
+| :--- |
+| `T`  |
 
 #### Type declaration
 
-| Name             | Type      | Description                                                       |
-| :--------------- | :-------- | :---------------------------------------------------------------- |
-| `skipSubscribe?` | `boolean` | determines if the internal subscribe behaviour should be skipped. |
+| Name             | Type                                                                                          | Description                                                        |
+| :--------------- | :-------------------------------------------------------------------------------------------- | :----------------------------------------------------------------- |
+| `skipSubscribe?` | `boolean`                                                                                     | determines if the internal subscribe behaviour should be skipped.  |
+| `onChange?`      | (`value`: `T`, `data`: [`HistoryChangeMetadata`](modules.md#historychangemetadata)) => `void` | callback that triggers any time a change happens wihin the utility |
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:43](https://github.com/valtiojs/valtio-history/blob/43e2fcd/packages/history-utility/src/history-utility.ts#L43)
+[packages/history-utility/src/history-utility.ts:54](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L54)
 
 ## Functions
 
@@ -114,10 +139,10 @@ Notes: <br>
 
 #### Parameters
 
-| Name           | Type                                                       | Description                                    |
-| :------------- | :--------------------------------------------------------- | :--------------------------------------------- |
-| `initialValue` | `V`                                                        | any value to be tracked                        |
-| `options?`     | `boolean` \| [`HistoryOptions`](modules.md#historyoptions) | use to configure the proxyWithHistory utility. |
+| Name           | Type                                                              | Description                                    |
+| :------------- | :---------------------------------------------------------------- | :--------------------------------------------- |
+| `initialValue` | `V`                                                               | any value to be tracked                        |
+| `options?`     | `boolean` \| [`HistoryOptions`](modules.md#historyoptions)\<`V`\> | use to configure the proxyWithHistory utility. |
 
 #### Returns
 
@@ -154,4 +179,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/history-utility.ts:129](https://github.com/valtiojs/valtio-history/blob/43e2fcd/packages/history-utility/src/history-utility.ts#L129)
+[packages/history-utility/src/history-utility.ts:147](https://github.com/valtiojs/valtio-history/blob/1c4e781/packages/history-utility/src/history-utility.ts#L147)
