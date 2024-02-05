@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { useSnapshot } from 'valtio';
 import { describe, it } from 'vitest';
 
-import { proxyWithHistory } from '../history-utility';
+import { proxyWithHistory } from '../';
 
 describe('proxyWithHistory: react', () => {
   describe('basic', () => {
