@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { HistoryNode, proxyWithHistory } from '../history-utility';
+import { HistoryNode, proxyWithHistory } from '../';
 
 const mapNumbers = (node: HistoryNode<{ count: number }>) =>
   node.snapshot.count;
