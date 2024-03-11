@@ -167,6 +167,21 @@ export function proxyWithHistory<V>(
       return node?.createdAt;
     },
     /**
+     * the current history node index.
+     *
+     * @returns number
+     */
+    get currentIndex() {
+      return this.history.index;
+    },
+    /**the total number of the history nodes.
+     *
+     * @returns number
+     */
+    get historyNodeCount() {
+      return this.history.nodes.length;
+    },
+    /**
      * utility method to get a history node.
      * The snapshot within this node is already cloned and
      * will not affect the original value if updated.

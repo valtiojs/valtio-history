@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:26](https://github.com/valtiojs/valtio-history/blob/f2ad050/packages/history-utility/src/index.ts#L26)
+[packages/history-utility/src/index.ts:26](https://github.com/valtiojs/valtio-history/blob/8b7f8fc/packages/history-utility/src/index.ts#L26)
 
 ---
 
@@ -60,7 +60,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:10](https://github.com/valtiojs/valtio-history/blob/f2ad050/packages/history-utility/src/index.ts#L10)
+[packages/history-utility/src/index.ts:10](https://github.com/valtiojs/valtio-history/blob/8b7f8fc/packages/history-utility/src/index.ts#L10)
 
 ---
 
@@ -76,7 +76,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:43](https://github.com/valtiojs/valtio-history/blob/f2ad050/packages/history-utility/src/index.ts#L43)
+[packages/history-utility/src/index.ts:43](https://github.com/valtiojs/valtio-history/blob/8b7f8fc/packages/history-utility/src/index.ts#L43)
 
 ## Functions
 
@@ -143,6 +143,8 @@ proxyObject
 | `undo`                    | () => `void`                                                                                                          | a function to go back in history                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `value`                   | `V`                                                                                                                   | any value to be tracked (does not have to be an object)                                                                                                                                                                                                                                                                                                                                                                                                |
 | `get currentChangeDate()` | `undefined` \| `Date`                                                                                                 | -                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `get currentIndex()`      | `number`                                                                                                              | -                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `get historyNodeCount()`  | `number`                                                                                                              | -                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `get isRedoEnabled()`     | `boolean`                                                                                                             | -                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `get isUndoEnabled()`     | `boolean`                                                                                                             | -                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
@@ -157,4 +159,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:129](https://github.com/valtiojs/valtio-history/blob/f2ad050/packages/history-utility/src/index.ts#L129)
+[packages/history-utility/src/index.ts:129](https://github.com/valtiojs/valtio-history/blob/8b7f8fc/packages/history-utility/src/index.ts#L129)

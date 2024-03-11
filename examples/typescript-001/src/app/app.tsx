@@ -13,9 +13,10 @@ export default function App() {
     value,
     undo,
     redo,
-    history,
     isUndoEnabled,
     isRedoEnabled,
+    currentIndex,
+    historyNodeCount,
     currentChangeDate,
   } = useSnapshot(textProxy);
 
@@ -24,7 +25,7 @@ export default function App() {
       <h2>Editor with history</h2>
       <div className="info">
         <span>
-          change {history.index + 1} / {history.nodes.length}
+          change {currentIndex + 1} / {historyNodeCount}
         </span>
         <span>|</span>
         <span>{currentChangeDate?.toISOString()}</span>
