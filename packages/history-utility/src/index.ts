@@ -150,10 +150,20 @@ export function proxyWithHistory<V>(
     /**
      * get the date when a node was entered into history.
      *
+     * @deprecated @see {@link https://github.com/valtiojs/valtio-history/issues/10}
      * @returns date
      */
     getCurrentChangeDate: () => {
       const node = proxyObject.history.nodes[proxyObject.history.index];
+      return node?.createdAt;
+    },
+    /**
+     * get the date when a node was entered into history.
+     *
+     * @returns date
+     */
+    get currentChangeDate() {
+      const node = this.history.nodes[this.history.index];
       return node?.createdAt;
     },
     /**
@@ -187,7 +197,23 @@ export function proxyWithHistory<V>(
       proxyObject.history.index = index;
     },
     /**
+     * a getter to return true if undo is available
+     * @returns boolean
+     */
+    get isUndoEnabled() {
+      return this.history.index > 0;
+    },
+    /**
+     * a getter to return true if redo is available
+     * @returns boolean
+     */
+    get isRedoEnabled() {
+      return this.history.index < this.history.nodes.length - 1;
+    },
+    /**
      * a function to return true if undo is available
+     *
+     * @deprecated @see {@link https://github.com/valtiojs/valtio-history/issues/10}
      * @returns boolean
      */
     canUndo: () => proxyObject.history.index > 0,
@@ -204,6 +230,8 @@ export function proxyWithHistory<V>(
     },
     /**
      * a function to return true if redo is available
+     *
+     * @deprecated @see {@link https://github.com/valtiojs/valtio-history/issues/10}
      * @returns boolean
      */
     canRedo: () =>
