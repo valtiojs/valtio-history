@@ -31,30 +31,40 @@ describe('proxyWithHistory: vanilla', () => {
       expect(state.value.count).toEqual(0);
       expect(state.canRedo()).toEqual(false);
       expect(state.canUndo()).toEqual(false);
+      expect(state.isRedoEnabled).toEqual(false);
+      expect(state.isUndoEnabled).toEqual(false);
 
       state.value.count += 1;
       await Promise.resolve();
       expect(state.value.count).toEqual(1);
       expect(state.canRedo()).toEqual(false);
       expect(state.canUndo()).toEqual(true);
+      expect(state.isRedoEnabled).toEqual(false);
+      expect(state.isUndoEnabled).toEqual(true);
 
       state.value.count += 1;
       await Promise.resolve();
       expect(state.value.count).toEqual(2);
       expect(state.canRedo()).toEqual(false);
       expect(state.canUndo()).toEqual(true);
+      expect(state.isRedoEnabled).toEqual(false);
+      expect(state.isUndoEnabled).toEqual(true);
 
       state.undo();
       await Promise.resolve();
       expect(state.value.count).toEqual(1);
       expect(state.canRedo()).toEqual(true);
       expect(state.canUndo()).toEqual(true);
+      expect(state.isRedoEnabled).toEqual(true);
+      expect(state.isUndoEnabled).toEqual(true);
 
       state.undo();
       await Promise.resolve();
       expect(state.value.count).toEqual(0);
       expect(state.canRedo()).toEqual(true);
       expect(state.canUndo()).toEqual(false);
+      expect(state.isRedoEnabled).toEqual(true);
+      expect(state.isUndoEnabled).toEqual(false);
     });
 
     it('should provide basic sequential redo functionality', async () => {
@@ -76,24 +86,32 @@ describe('proxyWithHistory: vanilla', () => {
       expect(state.value.count).toEqual(0);
       expect(state.canRedo()).toEqual(true);
       expect(state.canUndo()).toEqual(false);
+      expect(state.isRedoEnabled).toEqual(true);
+      expect(state.isUndoEnabled).toEqual(false);
 
       state.redo();
       await Promise.resolve();
       expect(state.value.count).toEqual(1);
       expect(state.canRedo()).toEqual(true);
       expect(state.canUndo()).toEqual(true);
+      expect(state.isRedoEnabled).toEqual(true);
+      expect(state.isUndoEnabled).toEqual(true);
 
       state.redo();
       await Promise.resolve();
       expect(state.value.count).toEqual(2);
       expect(state.canRedo()).toEqual(true);
       expect(state.canUndo()).toEqual(true);
+      expect(state.isRedoEnabled).toEqual(true);
+      expect(state.isUndoEnabled).toEqual(true);
 
       state.redo();
       await Promise.resolve();
       expect(state.value.count).toEqual(3);
       expect(state.canRedo()).toEqual(false);
       expect(state.canUndo()).toEqual(true);
+      expect(state.isRedoEnabled).toEqual(false);
+      expect(state.isUndoEnabled).toEqual(true);
     });
   });
 
