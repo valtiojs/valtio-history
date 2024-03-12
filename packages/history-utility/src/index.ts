@@ -102,15 +102,6 @@ const normalizeOptions = (
  *   - history.index: the history index of the current snapshot<br>
  *   - history.nodes: the nodes of the history for each change<br>
  *   - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>
- * - canUndo: a function to return true if undo is available <br>
- * - undo: a function to go back history <br>
- * - canRedo: a function to return true if redo is available <br>
- * - redo: a function to go forward history <br>
- * - saveHistory: a function to save history <br>
- * - getCurrentChangeDate: gets the date of the current change <br>
- * - remove: a function to remove a specified history index <br>
- * - replace: a function to replace a snapshot at a specified history index <br>
- * - getNode: a function to get the node at a specified history index <br>
  *
  * <br>
  * Notes: <br>
@@ -158,9 +149,9 @@ export function proxyWithHistory<V>(
       return node?.createdAt;
     },
     /**
-     * get the date when a node was entered into history.
+     * get the date when the current node was entered into history.
      *
-     * @returns date
+     * @type {Date}
      */
     get currentChangeDate() {
       const node = this.history.nodes[this.history.index];
@@ -169,14 +160,14 @@ export function proxyWithHistory<V>(
     /**
      * the current history node index.
      *
-     * @returns number
+     * @type {number}
      */
     get currentIndex() {
       return this.history.index;
     },
     /**the total number of the history nodes.
      *
-     * @returns number
+     * @type {number}
      */
     get historyNodeCount() {
       return this.history.nodes.length;

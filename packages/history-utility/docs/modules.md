@@ -92,15 +92,6 @@ It includes following main properties:<br>
   - history.index: the history index of the current snapshot<br>
   - history.nodes: the nodes of the history for each change<br>
   - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>
-- canUndo: a function to return true if undo is available <br>
-- undo: a function to go back history <br>
-- canRedo: a function to return true if redo is available <br>
-- redo: a function to go forward history <br>
-- saveHistory: a function to save history <br>
-- getCurrentChangeDate: gets the date of the current change <br>
-- remove: a function to remove a specified history index <br>
-- replace: a function to replace a snapshot at a specified history index <br>
-- getNode: a function to get the node at a specified history index <br>
 
 <br>
 Notes: <br>
