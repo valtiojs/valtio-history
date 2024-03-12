@@ -1,8 +1,8 @@
 # valtio-history
 
-[![npm version](https://badge.fury.io/js/valtio-history.svg)](https://badge.fury.io/js/valtio-history)
-
 valtio utility for creating a proxy state with history tracking
+
+[![npm version](https://badge.fury.io/js/valtio-history.svg)](https://badge.fury.io/js/valtio-history)
 
 https://valtio.pmnd.rs/docs/api/utils/proxyWithHistory
 
@@ -35,10 +35,9 @@ export default function App() {
     undo,
     redo,
     history,
-    canUndo,
-    canRedo,
-    getCurrentChangeDate,
-    getNode,
+    isUndoEnabled,
+    isRedoEnabled,
+    currentChangeDate,
     remove,
     replace,
 } = useSnapshot(state);
