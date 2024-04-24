@@ -23,13 +23,14 @@ export type HistoryNode<T> = {
   updatedAt?: Date;
 };
 
-const EmptyWIP = {};
+type EmptyWIP = Record<string, never>;
+const EmptyWIP: EmptyWIP = {};
 
 export type History<T> = {
   /**
    * field for holding sandbox changes; used to avoid infinite loops
    */
-  wip: Snapshot<T> | typeof EmptyWIP;
+  wip: Snapshot<T> | EmptyWIP;
   /**
    * the nodes of the history for each change
    */
@@ -232,7 +233,7 @@ export function proxyWithHistory<V>(
       if (proxyObject.canUndo()) {
         proxyObject.history.wip = proxyObject.clone(
           proxyObject.history.nodes[--proxyObject.history.index]?.snapshot
-        ) ?? EmptyWIP;
+        ) ?? EmptyWIP
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
