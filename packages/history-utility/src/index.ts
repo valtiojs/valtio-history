@@ -23,11 +23,13 @@ export type HistoryNode<T> = {
   updatedAt?: Date;
 };
 
+const EmptyWIP = {};
+
 export type History<T> = {
   /**
    * field for holding sandbox changes; used to avoid infinite loops
    */
-  wip?: Snapshot<T>;
+  wip: Snapshot<T> | typeof EmptyWIP;
   /**
    * the nodes of the history for each change
    */
@@ -134,7 +136,7 @@ export function proxyWithHistory<V>(
      *   - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>
      */
     history: ref<History<V>>({
-      wip: undefined, // to avoid infinite loop
+      wip: EmptyWIP, // to avoid infinite loop
       nodes: [],
       index: -1,
     }),
@@ -230,7 +232,7 @@ export function proxyWithHistory<V>(
       if (proxyObject.canUndo()) {
         proxyObject.history.wip = proxyObject.clone(
           proxyObject.history.nodes[--proxyObject.history.index]?.snapshot
-        );
+        ) ?? EmptyWIP;
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
@@ -247,9 +249,10 @@ export function proxyWithHistory<V>(
      */
     redo: () => {
       if (proxyObject.canRedo()) {
-        proxyObject.history.wip = proxyObject.clone(
-          proxyObject.history.nodes[++proxyObject.history.index]?.snapshot
-        );
+        proxyObject.history.wip =
+          proxyObject.clone(
+            proxyObject.history.nodes[++proxyObject.history.index]?.snapshot
+          ) ?? EmptyWIP;
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
@@ -308,7 +311,9 @@ export function proxyWithHistory<V>(
         const resolvedIndex = isLastIndex ? index - 1 : index + 1;
         const resolvedNode = proxyObject.history.nodes[resolvedIndex];
 
-        proxyObject.history.wip = proxyObject.clone(resolvedNode?.snapshot);
+        proxyObject.history.wip = proxyObject.clone(
+          resolvedNode?.snapshot
+        ) ?? EmptyWIP;
         proxyObject.value = proxyObject.history.wip as V;
 
         if (isLastIndex) proxyObject.history.index--;

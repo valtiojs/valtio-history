@@ -319,4 +319,74 @@ describe('proxyWithHistory: react', () => {
       );
     });
   });
+
+  describe('edge cases', () => {
+    it('should update history when a state property is set to undefined', async () => {
+      const initialState: { count: number; foo?: string } = {
+        count: 0,
+        foo: 'bar',
+      };
+
+      const state = proxyWithHistory(initialState);
+
+      function handleIncrement() {
+        if (state.value.count === 1) {
+          state.value.foo = undefined;
+        } else {
+          state.value.foo = 'bar';
+        }
+        state.value.count++;
+      }
+
+      const Counter = () => {
+        const snap = useSnapshot(state);
+        return (
+          <>
+            <div>count: {snap.value.count}</div>
+            <button onClick={handleIncrement}>inc</button>
+            <button onClick={snap.undo}>undo</button>
+            <button onClick={snap.redo}>redo</button>
+          </>
+        );
+      };
+
+      render(
+        <StrictMode>
+          <Counter />
+        </StrictMode>
+      );
+
+      await screen.findByText('count: 0');
+
+      fireEvent.click(screen.getByText('inc'));
+      await screen.findByText('count: 1');
+
+      fireEvent.click(screen.getByText('inc'));
+      await screen.findByText('count: 2');
+
+      fireEvent.click(screen.getByText('inc'));
+      await screen.findByText('count: 3');
+
+      fireEvent.click(screen.getByText('undo'));
+      await screen.findByText('count: 2');
+
+      fireEvent.click(screen.getByText('redo'));
+      await screen.findByText('count: 3');
+
+      fireEvent.click(screen.getByText('undo'));
+      await screen.findByText('count: 2');
+
+      fireEvent.click(screen.getByText('undo'));
+      await screen.findByText('count: 1');
+
+      fireEvent.click(screen.getByText('undo'));
+      await screen.findByText('count: 0');
+
+      fireEvent.click(screen.getByText('inc'));
+      await screen.findByText('count: 1');
+
+      fireEvent.click(screen.getByText('undo'));
+      await screen.findByText('count: 0');
+    });
+  });
 });
