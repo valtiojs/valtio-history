@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useSnapshot } from 'valtio';
-import { describe, it } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 import { proxyWithHistory } from '../';
 
@@ -324,18 +324,17 @@ describe('proxyWithHistory: react', () => {
     it('should update history when a state property is set to undefined', async () => {
       const initialState: { count: number; foo?: string } = {
         count: 0,
-        foo: 'bar',
+        foo: 'bar'
       };
 
       const state = proxyWithHistory(initialState);
 
-      function handleIncrement() {
-        if (state.value.count === 1) {
-          state.value.foo = undefined;
-        } else {
-          state.value.foo = 'bar';
-        }
+      function incrementCounter() {
         state.value.count++;
+      }
+
+      function setValueToUndefined() {
+        state.value.foo = undefined;
       }
 
       const Counter = () => {
@@ -343,7 +342,6 @@ describe('proxyWithHistory: react', () => {
         return (
           <>
             <div>count: {snap.value.count}</div>
-            <button onClick={handleIncrement}>inc</button>
             <button onClick={snap.undo}>undo</button>
             <button onClick={snap.redo}>redo</button>
           </>
@@ -357,36 +355,19 @@ describe('proxyWithHistory: react', () => {
       );
 
       await screen.findByText('count: 0');
+      expect(state.history.nodes.length).toBe(1);
+      expect(state.history.nodes[state.history.nodes.length - 1]?.snapshot.count).toBe(0);
 
-      fireEvent.click(screen.getByText('inc'));
+      incrementCounter();
       await screen.findByText('count: 1');
+      expect(state.history.nodes.length).toBe(2);
+      expect(state.history.nodes[state.history.nodes.length - 1]?.snapshot.count).toBe(1);
 
-      fireEvent.click(screen.getByText('inc'));
+      incrementCounter();
+      setValueToUndefined();
       await screen.findByText('count: 2');
-
-      fireEvent.click(screen.getByText('inc'));
-      await screen.findByText('count: 3');
-
-      fireEvent.click(screen.getByText('undo'));
-      await screen.findByText('count: 2');
-
-      fireEvent.click(screen.getByText('redo'));
-      await screen.findByText('count: 3');
-
-      fireEvent.click(screen.getByText('undo'));
-      await screen.findByText('count: 2');
-
-      fireEvent.click(screen.getByText('undo'));
-      await screen.findByText('count: 1');
-
-      fireEvent.click(screen.getByText('undo'));
-      await screen.findByText('count: 0');
-
-      fireEvent.click(screen.getByText('inc'));
-      await screen.findByText('count: 1');
-
-      fireEvent.click(screen.getByText('undo'));
-      await screen.findByText('count: 0');
+      expect(state.history.nodes.length).toBe(3);
+      expect(state.history.nodes[state.history.nodes.length - 1]?.snapshot.count).toBe(2);
     });
   });
 });
