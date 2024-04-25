@@ -369,5 +369,54 @@ describe('proxyWithHistory: react', () => {
       expect(state.history.nodes.length).toBe(3);
       expect(state.history.nodes[state.history.nodes.length - 1]?.snapshot.count).toBe(2);
     });
+
+    it('should update history when a state property is deleted', async () => {
+      const initialState: { count: number; foo?: string } = {
+        count: 0,
+        foo: 'bar'
+      };
+
+      const state = proxyWithHistory(initialState);
+
+      function incrementCounter() {
+        state.value.count++;
+      }
+
+      function deleteValue() {
+        delete state.value.foo;
+      }
+
+      const Counter = () => {
+        const snap = useSnapshot(state);
+        return (
+          <>
+            <div>count: {snap.value.count}</div>
+            <button onClick={snap.undo}>undo</button>
+            <button onClick={snap.redo}>redo</button>
+          </>
+        );
+      };
+
+      render(
+        <StrictMode>
+          <Counter />
+        </StrictMode>
+      );
+
+      await screen.findByText('count: 0');
+      expect(state.history.nodes.length).toBe(1);
+      expect(state.history.nodes[state.history.nodes.length - 1]?.snapshot.count).toBe(0);
+
+      incrementCounter();
+      await screen.findByText('count: 1');
+      expect(state.history.nodes.length).toBe(2);
+      expect(state.history.nodes[state.history.nodes.length - 1]?.snapshot.count).toBe(1);
+
+      incrementCounter();
+      deleteValue();
+      await screen.findByText('count: 2');
+      expect(state.history.nodes.length).toBe(3);
+      expect(state.history.nodes[state.history.nodes.length - 1]?.snapshot.count).toBe(2);
+    });
   });
 });
