@@ -115,6 +115,54 @@ describe('proxyWithHistory: vanilla', () => {
     });
   });
 
+  describe('edge cases', () => {
+    it('should update history when property is deleted', async () => {
+      const state = proxyWithHistory<
+        Partial<{ prop0: number; prop1: number; prop2: number; prop3: number }>
+      >({ prop0: 0, prop1: 1, prop2: 2, prop3: 3 });
+
+      await Promise.resolve();
+      expect(state.value.prop0).toEqual(0);
+      expect(state.value.prop1).toEqual(1);
+      expect(state.value.prop2).toEqual(2);
+      expect(state.value.prop3).toEqual(3);
+      expect(state.history.nodes.length).toEqual(1);
+
+      delete state.value.prop0;
+
+      await Promise.resolve();
+
+      expect(state.value.prop0).toEqual(undefined);
+      expect(state.value.prop1).toEqual(1);
+      expect(state.value.prop2).toEqual(2);
+      expect(state.value.prop3).toEqual(3);
+      expect(state.history.nodes.length).toEqual(2);
+    });
+
+    it('should update history when property is set to undefined', async () => {
+      const state = proxyWithHistory<
+        Partial<{ prop0: number; prop1: number; prop2: number; prop3: number }>
+      >({ prop0: 0, prop1: 1, prop2: 2, prop3: 3 });
+
+      await Promise.resolve();
+      expect(state.value.prop0).toEqual(0);
+      expect(state.value.prop1).toEqual(1);
+      expect(state.value.prop2).toEqual(2);
+      expect(state.value.prop3).toEqual(3);
+      expect(state.history.nodes.length).toEqual(1);
+
+      state.value.prop0 = undefined;
+
+      await Promise.resolve();
+
+      expect(state.value.prop0).toEqual(undefined);
+      expect(state.value.prop1).toEqual(1);
+      expect(state.value.prop2).toEqual(2);
+      expect(state.value.prop3).toEqual(3);
+      expect(state.history.nodes.length).toEqual(2);
+    });
+  });
+
   describe('remove', () => {
     it('should remove no items in history when only one item', async () => {
       const state = proxyWithHistory({ count: 0 });
