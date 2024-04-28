@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useSnapshot } from 'valtio';
-import { describe, it, expect } from 'vitest';
+import { describe, it } from 'vitest';
 
 import { proxyWithHistory } from '../';
 
