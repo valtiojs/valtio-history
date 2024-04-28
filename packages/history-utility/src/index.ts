@@ -23,11 +23,13 @@ export type HistoryNode<T> = {
   updatedAt?: Date;
 };
 
+const EMPTY_WIP = Symbol('valtio-history-wip-empty');
+
 export type History<T> = {
   /**
    * field for holding sandbox changes; used to avoid infinite loops
    */
-  wip?: Snapshot<T>;
+  wip: Snapshot<T> | typeof EMPTY_WIP;
   /**
    * the nodes of the history for each change
    */
@@ -134,7 +136,7 @@ export function proxyWithHistory<V>(
      *   - history.wip: field for holding sandbox changes; used to avoid infinite loops<br>
      */
     history: ref<History<V>>({
-      wip: undefined, // to avoid infinite loop
+      wip: EMPTY_WIP, // to avoid infinite loop
       nodes: [],
       index: -1,
     }),
@@ -228,9 +230,10 @@ export function proxyWithHistory<V>(
      */
     undo: () => {
       if (proxyObject.canUndo()) {
-        proxyObject.history.wip = proxyObject.clone(
-          proxyObject.history.nodes[--proxyObject.history.index]?.snapshot
-        );
+        proxyObject.history.wip =
+          proxyObject.clone(
+            proxyObject.history.nodes[--proxyObject.history.index]?.snapshot
+          ) ?? EMPTY_WIP;
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
@@ -247,9 +250,10 @@ export function proxyWithHistory<V>(
      */
     redo: () => {
       if (proxyObject.canRedo()) {
-        proxyObject.history.wip = proxyObject.clone(
-          proxyObject.history.nodes[++proxyObject.history.index]?.snapshot
-        );
+        proxyObject.history.wip =
+          proxyObject.clone(
+            proxyObject.history.nodes[++proxyObject.history.index]?.snapshot
+          ) ?? EMPTY_WIP;
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
@@ -308,7 +312,8 @@ export function proxyWithHistory<V>(
         const resolvedIndex = isLastIndex ? index - 1 : index + 1;
         const resolvedNode = proxyObject.history.nodes[resolvedIndex];
 
-        proxyObject.history.wip = proxyObject.clone(resolvedNode?.snapshot);
+        proxyObject.history.wip =
+          proxyObject.clone(resolvedNode?.snapshot) ?? EMPTY_WIP;
         proxyObject.value = proxyObject.history.wip as V;
 
         if (isLastIndex) proxyObject.history.index--;
