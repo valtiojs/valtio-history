@@ -23,7 +23,7 @@ export type HistoryNode<T> = {
   updatedAt?: Date;
 };
 
-const EMPTY_WIP  = Symbol('valtio-history-wip-empty');
+const EMPTY_WIP = Symbol('valtio-history-wip-empty');
 
 export type History<T> = {
   /**
@@ -230,9 +230,10 @@ export function proxyWithHistory<V>(
      */
     undo: () => {
       if (proxyObject.canUndo()) {
-        proxyObject.history.wip = proxyObject.clone(
-          proxyObject.history.nodes[--proxyObject.history.index]?.snapshot
-        ) ?? EMPTY_WIP
+        proxyObject.history.wip =
+          proxyObject.clone(
+            proxyObject.history.nodes[--proxyObject.history.index]?.snapshot
+          ) ?? EMPTY_WIP;
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
@@ -311,9 +312,8 @@ export function proxyWithHistory<V>(
         const resolvedIndex = isLastIndex ? index - 1 : index + 1;
         const resolvedNode = proxyObject.history.nodes[resolvedIndex];
 
-        proxyObject.history.wip = proxyObject.clone(
-          resolvedNode?.snapshot
-        ) ?? EMPTY_WIP;
+        proxyObject.history.wip =
+          proxyObject.clone(resolvedNode?.snapshot) ?? EMPTY_WIP;
         proxyObject.value = proxyObject.history.wip as V;
 
         if (isLastIndex) proxyObject.history.index--;
