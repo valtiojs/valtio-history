@@ -32,11 +32,11 @@
 | :------ | :----------------------------------------------- | :-------------------------------------------------------------- |
 | `index` | `number`                                         | the history index of the current snapshot                       |
 | `nodes` | [`HistoryNode`](modules.md#historynode)\<`T`\>[] | the nodes of the history for each change                        |
-| `wip?`  | `Snapshot`\<`T`\>                                | field for holding sandbox changes; used to avoid infinite loops |
+| `wip`   | `Snapshot`\<`T`\> \| typeof `EMPTY_WIP`          | field for holding sandbox changes; used to avoid infinite loops |
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:26](https://github.com/valtiojs/valtio-history/blob/1378132/packages/history-utility/src/index.ts#L26)
+[packages/history-utility/src/index.ts:28](https://github.com/valtiojs/valtio-history/blob/ec38985/packages/history-utility/src/index.ts#L28)
 
 ---
 
@@ -60,7 +60,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:10](https://github.com/valtiojs/valtio-history/blob/1378132/packages/history-utility/src/index.ts#L10)
+[packages/history-utility/src/index.ts:10](https://github.com/valtiojs/valtio-history/blob/ec38985/packages/history-utility/src/index.ts#L10)
 
 ---
 
@@ -76,7 +76,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:43](https://github.com/valtiojs/valtio-history/blob/1378132/packages/history-utility/src/index.ts#L43)
+[packages/history-utility/src/index.ts:45](https://github.com/valtiojs/valtio-history/blob/ec38985/packages/history-utility/src/index.ts#L45)
 
 ## Functions
 
@@ -150,4 +150,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:120](https://github.com/valtiojs/valtio-history/blob/1378132/packages/history-utility/src/index.ts#L120)
+[packages/history-utility/src/index.ts:122](https://github.com/valtiojs/valtio-history/blob/ec38985/packages/history-utility/src/index.ts#L122)
