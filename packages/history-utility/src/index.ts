@@ -182,7 +182,7 @@ export function proxyWithHistory<V>(
      * @param index
      * @returns historyNode
      */
-    getNode: (index: number) => {
+    getNode: (index: number): HistoryNode<V> | undefined => {
       const node = proxyObject.history.nodes[index];
       return node
         ? { ...node, snapshot: proxyObject.clone(node.snapshot) }

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "nx serve",
-    "build": "nx build",
+    "build": "nx run-many -t build",
     "test": "nx test",
     "release": "release-it",
     "git:clean-tags": "git tag -l | xargs git tag -d && git fetch -t"
