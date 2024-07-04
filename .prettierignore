@@ -5,3 +5,4 @@
 pnpm-*.yaml
 
 /.nx/workspace-data
+packages/history-utility/docs/modules.md
