@@ -1,9 +1,0 @@
-{
-  "buildCommand": "build",
-  "packages": ["packages/history-utility"],
-  "publishDirectory": {
-    "valtio-history": "dist/packages/history-utility"
-  },
-  "sandboxes": ["new", "react-typescript-react-ts"],
-  "node": "20"
-}
