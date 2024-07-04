@@ -12,7 +12,8 @@
     "build": "nx build",
     "test": "nx test",
     "release": "release-it",
-    "git:clean-tags": "git tag -l | xargs git tag -d && git fetch -t"
+    "git:clean-tags": "git tag -l | xargs git tag -d && git fetch -t",
+    "nx-reset": "nx reset && nx daemon --start"
   },
   "private": true,
   "dependencies": {
