@@ -1,11 +1,11 @@
 import {
-  unstable_buildProxyFunction as buildProxyFunction,
   proxy,
   ref,
   snapshot,
   subscribe,
 } from 'valtio/vanilla';
-import type { INTERNAL_Snapshot as Snapshot } from 'valtio/vanilla';
+import type { Snapshot } from 'valtio/vanilla';
+import { deepClone } from 'valtio/vanilla/utils';
 
 export type HistoryNode<T> = {
   /**
@@ -47,27 +47,6 @@ export type HistoryOptions = {
    * determines if the internal subscribe behaviour should be skipped.
    */
   skipSubscribe?: boolean;
-};
-
-const isObject = (value: unknown): value is object =>
-  !!value && typeof value === 'object';
-
-let refSet: WeakSet<object> | undefined;
-
-const deepClone = <T>(value: T): T => {
-  if (!refSet) {
-    refSet = buildProxyFunction()[2];
-  }
-  if (!isObject(value) || refSet.has(value)) {
-    return value;
-  }
-  const baseObject: T = Array.isArray(value)
-    ? []
-    : Object.create(Object.getPrototypeOf(value));
-  Reflect.ownKeys(value).forEach((key) => {
-    baseObject[key as keyof T] = deepClone(value[key as keyof T]);
-  });
-  return baseObject;
 };
 
 const normalizeOptions = (
