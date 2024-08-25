@@ -1,9 +1,4 @@
-import {
-  proxy,
-  ref,
-  snapshot,
-  subscribe,
-} from 'valtio/vanilla';
+import { proxy, ref, snapshot, subscribe } from 'valtio/vanilla';
 import type { Snapshot } from 'valtio/vanilla';
 import { deepClone } from 'valtio/vanilla/utils';
 
