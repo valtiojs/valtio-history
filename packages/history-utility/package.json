@@ -19,7 +19,7 @@
     "tslib": "^2.6.3"
   },
   "peerDependencies": {
-    "valtio": ">=1.0.0"
+    "valtio": ">=2.0.0-rc.2"
   },
   "type": "commonjs",
   "main": "./src/index.js",
