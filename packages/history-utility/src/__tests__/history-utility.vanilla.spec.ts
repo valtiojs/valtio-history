@@ -451,7 +451,34 @@ describe('proxyWithHistory: vanilla', () => {
         0, 1, 2, 100, 200, 5,
       ]);
     });
+
+    it('should not mutate historical snapshot when active state is modified after replace', async () => {
+      const state = proxyWithHistory({ count: 0 });
+
+      state.value.count += 1;
+      await Promise.resolve();
+      state.value.count += 1;
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(2);
+      expect(state.history.nodes.length).toEqual(3);
+      expect(state.history.index).toEqual(2);
+      expect(state.history.nodes.map(mapNumbers)).toEqual([0, 1, 2]);
+
+      state.replace(2, { count: 50 });
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(50);
+      expect(state.history.nodes[2]?.snapshot.count).toEqual(50);
+
+      state.value.count = 999;
+      await Promise.resolve();
+
+      expect(state.value.count).toEqual(999);
+      expect(state.history.nodes[2]?.snapshot.count).toEqual(50);
+    });
   });
+
   describe('goTo', () => {
     it('should be noop when invalid index is provided', async () => {
       const state = proxyWithHistory({ count: 0 });
