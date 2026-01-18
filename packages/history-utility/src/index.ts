@@ -331,7 +331,7 @@ export function proxyWithHistory<V>(
       };
 
       if (isCurrentIndex) {
-        proxyObject.history.wip = value;
+        proxyObject.history.wip = proxyObject.clone(value);
         proxyObject.value = proxyObject.history.wip as V;
       }
     },
