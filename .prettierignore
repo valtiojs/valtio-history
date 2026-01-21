@@ -3,6 +3,7 @@
 /coverage
 /.nx/cache
 pnpm-*.yaml
+.github
 
 /.nx/workspace-data
 packages/history-utility/docs/modules.md
