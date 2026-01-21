@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:23](https://github.com/valtiojs/valtio-history/blob/e617345/packages/history-utility/src/index.ts#L23)
+[packages/history-utility/src/index.ts:23](https://github.com/valtiojs/valtio-history/blob/08507da/packages/history-utility/src/index.ts#L23)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:5](https://github.com/valtiojs/valtio-history/blob/e617345/packages/history-utility/src/index.ts#L5)
+[packages/history-utility/src/index.ts:5](https://github.com/valtiojs/valtio-history/blob/08507da/packages/history-utility/src/index.ts#L5)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:40](https://github.com/valtiojs/valtio-history/blob/e617345/packages/history-utility/src/index.ts#L40)
+[packages/history-utility/src/index.ts:40](https://github.com/valtiojs/valtio-history/blob/08507da/packages/history-utility/src/index.ts#L40)
 
 ## Functions
 
@@ -149,4 +149,4 @@ const state = proxyWithHistory({
 
 #### Defined in
 
-[packages/history-utility/src/index.ts:96](https://github.com/valtiojs/valtio-history/blob/e617345/packages/history-utility/src/index.ts#L96)
+[packages/history-utility/src/index.ts:96](https://github.com/valtiojs/valtio-history/blob/08507da/packages/history-utility/src/index.ts#L96)
