@@ -1,3 +1,10 @@
 packages:
-  - 'examples/*'
-  - 'packages/*'
+  - examples/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - core-js
+  - esbuild
+  - nice-napi
+  - nx
