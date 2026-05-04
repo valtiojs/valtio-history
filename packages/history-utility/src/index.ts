@@ -1,6 +1,18 @@
-import { proxy, ref, snapshot, subscribe } from 'valtio/vanilla';
 import type { Snapshot } from 'valtio/vanilla';
+import * as valtioVanilla from 'valtio/vanilla';
 import { deepClone } from 'valtio/vanilla/utils';
+
+const { proxy, ref, snapshot, subscribe } = valtioVanilla;
+
+// Enable ops in subscribe callback - required for valtio-history to receive change operations
+// This is a global opt-in as of valtio v2.3.0 (see https://github.com/pmndrs/valtio/pull/1189)
+// We check for existence to maintain backwards compatibility with older valtio versions
+if (
+  'unstable_enableOp' in valtioVanilla &&
+  typeof valtioVanilla.unstable_enableOp === 'function'
+) {
+  valtioVanilla.unstable_enableOp(true);
+}
 
 export type HistoryNode<T> = {
   /**
