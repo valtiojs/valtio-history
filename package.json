@@ -5,7 +5,7 @@
   "author": "Daishi Kato",
   "repository": {
     "type": "git",
-    "url": "https://github.com/valtiojs/valtio-history.git"
+    "url": "git+https://github.com/valtiojs/valtio-history.git"
   },
   "scripts": {
     "start": "nx serve",
