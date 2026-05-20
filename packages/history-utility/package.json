@@ -2,6 +2,7 @@
   "name": "valtio-history",
   "version": "1.1.1",
   "author": "Daishi Kato",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/valtiojs/valtio-history.git"

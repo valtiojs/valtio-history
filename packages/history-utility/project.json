@@ -14,7 +14,7 @@
         "tsConfig": "packages/history-utility/tsconfig.lib.json",
         "assets": [
           "packages/history-utility/*.md",
-          "packages/history-utility/LICENSE"
+          "LICENSE"
         ]
       }
     },
