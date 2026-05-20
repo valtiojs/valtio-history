@@ -2,6 +2,13 @@ packages:
   - examples/*
   - packages/*
 
+allowBuilds:
+  '@swc/core': true
+  core-js: true
+  esbuild: true
+  nice-napi: true
+  nx: true
+
 onlyBuiltDependencies:
   - '@swc/core'
   - core-js
