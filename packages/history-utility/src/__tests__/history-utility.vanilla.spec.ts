@@ -1,3 +1,4 @@
+import { snapshot } from 'valtio/vanilla';
 import { describe, expect, it } from 'vitest';
 
 import { HistoryNode, proxyWithHistory } from '../';
@@ -23,6 +24,21 @@ describe('proxyWithHistory: vanilla', () => {
       state.redo();
       await Promise.resolve();
       expect(state.value.count).toEqual(1);
+    });
+
+    it('should update snapshot history getters after the first change', async () => {
+      const state = proxyWithHistory({ count: 0 });
+
+      expect(snapshot(state).isUndoEnabled).toEqual(false);
+
+      state.value.count += 1;
+      await Promise.resolve();
+
+      const stateSnapshot = snapshot(state);
+      expect(stateSnapshot.history.index).toEqual(1);
+      expect(stateSnapshot.history.nodes.length).toEqual(2);
+      expect(stateSnapshot.isUndoEnabled).toEqual(true);
+      expect(stateSnapshot.isRedoEnabled).toEqual(false);
     });
 
     it('should provide basic sequential undo functionality', async () => {

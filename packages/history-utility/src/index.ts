@@ -29,6 +29,7 @@ export type HistoryNode<T> = {
 };
 
 const EMPTY_WIP = Symbol('valtio-history-wip-empty');
+const HISTORY_VERSION = Symbol('valtio-history-version');
 
 export type History<T> = {
   /**
@@ -187,6 +188,7 @@ export function proxyWithHistory<V>(
       proxyObject.history.wip = proxyObject.clone(node.snapshot);
       proxyObject.value = proxyObject.history.wip as V;
       proxyObject.history.index = index;
+      bumpHistoryVersion();
     },
     /**
      * a getter to return true if undo is available
@@ -219,6 +221,7 @@ export function proxyWithHistory<V>(
             proxyObject.history.nodes[--proxyObject.history.index]?.snapshot
           ) ?? EMPTY_WIP;
         proxyObject.value = proxyObject.history.wip as V;
+        bumpHistoryVersion();
       }
     },
     /**
@@ -239,6 +242,7 @@ export function proxyWithHistory<V>(
             proxyObject.history.nodes[++proxyObject.history.index]?.snapshot
           ) ?? EMPTY_WIP;
         proxyObject.value = proxyObject.history.wip as V;
+        bumpHistoryVersion();
       }
     },
     /**
@@ -251,6 +255,7 @@ export function proxyWithHistory<V>(
         snapshot: snapshot(proxyObject).value,
       });
       ++proxyObject.history.index;
+      bumpHistoryVersion();
     },
     /**
      * a function that returns true when the history should be updated
@@ -258,12 +263,17 @@ export function proxyWithHistory<V>(
      * @param ops - subscribeOps from subscribe callback
      * @returns boolean
      */
-    shouldSaveHistory: (ops: SubscribeOps) =>
-      ops.every(
-        (op) =>
-          op[1][0] === 'value' &&
-          (op[0] !== 'set' || op[2] !== proxyObject.history.wip)
-      ),
+    shouldSaveHistory: (ops: SubscribeOps) => {
+      const valueOps = ops.filter((op) => op[1][0] !== HISTORY_VERSION);
+      return (
+        valueOps.length > 0 &&
+        valueOps.every(
+          (op) =>
+            op[1][0] === 'value' &&
+            (op[0] !== 'set' || op[2] !== proxyObject.history.wip)
+        )
+      );
+    },
     /**
      * a function to subscribe to changes made to `value`
      */
@@ -309,6 +319,7 @@ export function proxyWithHistory<V>(
         proxyObject.history.index--;
       }
 
+      bumpHistoryVersion();
       return node;
     },
 
@@ -344,8 +355,18 @@ export function proxyWithHistory<V>(
         proxyObject.history.wip = proxyObject.clone(value);
         proxyObject.value = proxyObject.history.wip as V;
       }
+
+      bumpHistoryVersion();
     },
   });
+
+  const internalProxyObject = proxyObject as typeof proxyObject & {
+    [HISTORY_VERSION]: number;
+  };
+  internalProxyObject[HISTORY_VERSION] = 0;
+  const bumpHistoryVersion = () => {
+    internalProxyObject[HISTORY_VERSION] += 1;
+  };
 
   proxyObject.saveHistory();
 
