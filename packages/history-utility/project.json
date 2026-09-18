@@ -12,10 +12,7 @@
         "outputPath": "dist/packages/history-utility",
         "main": "packages/history-utility/src/index.ts",
         "tsConfig": "packages/history-utility/tsconfig.lib.json",
-        "assets": [
-          "packages/history-utility/*.md",
-          "LICENSE"
-        ]
+        "assets": ["packages/history-utility/*.md", "LICENSE"]
       }
     },
     "publish": {
